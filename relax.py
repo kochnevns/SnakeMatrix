@@ -61,21 +61,21 @@ class Matrix:
             return False
 
 ### Приводит к удобному для вычислений виду
-
-    def comfortable_view(self):
-        new_matrix = []
+    @staticmethod
+    def comfortable_view(matrix, answers):
+        new_matrix, new_answers = list(), list()
         current_main_elem = 0
-        for row in self.matrix:
+        main_elems = []
+        for row in matrix.matrix:
             new_row = []
-            row[len(row)-1]*-1
             for el in row:
                 new_row.append(el/row[current_main_elem]*-1)
+            main_elems.append(row[current_main_elem])
             new_matrix.append(new_row)
             current_main_elem += 1
-        for r in new_matrix:
-            for el in r:
-                el *= -1
-        self.matrix = new_matrix
+        for j in range(0, len(answers.matrix)):
+            answers.matrix[j][0] = answers.matrix[j][0]/main_elems[j]
+        matrix.matrix = new_matrix
 
 ### Отделяет матрицу с переменными или ответами
 
@@ -156,45 +156,46 @@ class Matrix:
         return result
     @staticmethod
     def stop_condition(cur_residual, prev_residual):
-        if (cur_residual.matrix[Matrix.max_index(cur_residual)][0] - prev_residual.matrix[Matrix.max_index(prev_residual)][0]) \
-                / cur_residual.matrix[Matrix.max_index(prev_residual)][0] < 0.00001:
+        try:
+            if (cur_residual.matrix[Matrix.max_index(cur_residual)][0] - prev_residual.matrix[Matrix.max_index(prev_residual)][0]) \
+                    / cur_residual.matrix[Matrix.max_index(prev_residual)][0] < 0.00001:
+                return False
+            else:
+                return True
+        except ZeroDivisionError:
             return True
-        else:
-            return False
+### транспонировать матрицу
 
-### транспонировать матрицу 
     def transpose(self):
+        new_matrix = Matrix(self.j, self.i)
         matrix = []
         i = 0
-        new_row0, new_row1, new_row2 = [],[],[]
+        new_row0, new_row1, new_row2 = [], [], []
         for row in self.matrix:
             new_row0.append(row[0])
             new_row1.append(row[1])
             new_row2.append(row[2])
         matrix.append(new_row0)
-        matrix.append(new_row1)
+        matrix.append(new_row1) 
         matrix.append(new_row2)
-        self.matrix = matrix
+        new_matrix.matrix = matrix
+        return new_matrix
 
+### умножение на -1
 
-### Метод релаксации
-
-        """ def relax(self):
-        i = 0
-        iter = 0
-        proximation_vector = [[0], [0], [0]]
-        prev_residual = [[0], [0], [0]]
-        current_residual = [[0], [0], [0]]
-        new_matrix_a = []
-        new_matrix_b = []
+    def negative(self):
+        matrix = Matrix(3,1)
+        new_matrix = list()
         for row in self.matrix:
-            row[i] = 0
-            i += 1
-        print(self.matrix)
-        while not Matrix.stop_condition(current_residual, prev_residual):
-                    proximation_vector = Matrix.vector_sum(Matrix.mult(prev_residual, [[-1], [-1], [-1]]), Matrix.mult()
+            new_row = list()
+            for element in row:
+                new_row.append(-element)
+            new_matrix.append(new_row)
+        matrix.matrix = new_matrix
+        return matrix
+    
 
-"""
+
 
 
 

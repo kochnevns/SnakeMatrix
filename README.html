@@ -134,7 +134,7 @@ print(d.matrix)
         </code>
  </pre>
 <p>Для реализации алгоритма потребуется перемножать матрицы, складывать векторы (вертикальные матрицы), искать индекс максимального элемента в векторе</p>
-<p>Ниже - реализация соответствующих методов. Стоит отметить, что в метод, который складывет векторы, а также в метод, который ищет индекс строки максимального элемента, не стоит передавать что-то непохожее на векторы. Не стал тратить время на проверки, т.к. считаю, что показал достаточный уровень владения этим мастерством в методах для создания матрицы или импортирования матрицы из файла, или перемножения матриц. </p>
+<p>Ниже - реализация соответствующих методов. Стоит отметить, что в метод, который складывет векторы, а также в метод, который ищет индекс строки максимального элемента, не стоит передавать что-то непохожее на векторы. </p>
 <pre>
 <code class='python'>
 #Перемножение матриц
@@ -216,6 +216,44 @@ print(d.matrix)
  </pre>
 
 <p>Тут мы проверяем условие векторной нормы, как сказано в книге</p>
+<p>Затем ищем вектор <strong>R(k)</strong> по формуле <strong>-X(k) + DX + B </strong> до тех пор пока не будет выполнено условие остановки цикла  </p>
+<p>Благодаря разработанному функционалу для работы с матрицами и векторами (матрица с 1 столбцом), программа получилась довольно короткой: </p>
+<pre><code>
+from relax import *
+a = Matrix(3, 1)
+a.import_matrix_from_file()
+if a.split_matrix('matrix').is_symmetric():
+    print('Входная матрица симметрична. Можем продолжать.')
+else:
+    print('Матрица не симметрична. Выход из программы')
+    sys.exit()
+b = a.split_matrix('matrix')
+c = a.split_matrix('answers')
+
+if not b.sylvesters_criterion():
+    print('Матрица не удовлетворяет критерию Сильвестра')
+    b = Matrix.mult(b, b.transpose())
+    c = Matrix.mult(b.transpose(), c)
+
+print('Приводим матрицу к удобному виду...')
+Matrix.comfortable_view(b, c)
+
+for i in range(0, len(b.matrix)):
+    b.matrix[i][i] = 0
+cur_residual, prev_residual = Matrix(3, 1), Matrix(3, 1)
+prev_residual.matrix = [[0], [0], [0]]
+cur_residual.matrix = [[0], [0], [0]]
+while Matrix.stop_condition(cur_residual, prev_residual):
+    tmp = Matrix.vector_sum(cur_residual.negative(), Matrix.mult(b, cur_residual))
+    rk = Matrix.vector_sum(c, tmp)
+    for i in range(0,len(prev_residual.matrix)):
+        for j in range(0, len(prev_residual.matrix[0])):
+            prev_residual.matrix[i][j] = cur_residual.matrix[i][j]
+    cur_residual.matrix[rk.max_index()][0] = cur_residual.matrix[rk.max_index()][0] + rk.matrix[rk.max_index()][0]
+    print(cur_residual.matrix)
+    print(prev_residual.matrix)
+    print(rk.matrix)
+</code></pre>
 <p>
 </p>
 <script type="text/javascript" src='web_components/highlight/highlight.pack.js'></script>
