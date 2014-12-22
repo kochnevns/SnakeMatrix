@@ -49,9 +49,9 @@ while Matrix.stop_condition(cur_aprox, prev_aprox, numb_of_iter):
 
 
     print('Итерация # {numb}'.format(numb = numb_of_iter))
-    print('Текущая невязка: ' + str(cur_aprox.matrix))
-    print('Предыдущая невязка: ' + str(prev_aprox.matrix))
-    print('----------------------------'* 3)
+    print('Текущее приближение: ' + str(cur_aprox.matrix))
+    print('Предыдущее приближение: ' + str(prev_aprox.matrix))
+    print('----------------------------' * 3)
 
 
 
