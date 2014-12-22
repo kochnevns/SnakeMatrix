@@ -24,8 +24,8 @@ class Matrix:
 
 ### Читаем и создаем матрицу из файла
 
-    def import_matrix_from_file(self):
-        filename = input('Введите имя файла: ')
+    def import_matrix_from_file(self, filename='matrix.txt'):
+        #filename = input('Введите имя файла: ')
         try:
             f = open(filename)
             for line in f:
@@ -69,10 +69,11 @@ class Matrix:
         for row in matrix.matrix:
             new_row = []
             for el in row:
-                new_row.append(el/row[current_main_elem]*-1)
+                new_row.append(el/row[current_main_elem] * -1)
             main_elems.append(row[current_main_elem])
             new_matrix.append(new_row)
             current_main_elem += 1
+
         for j in range(0, len(answers.matrix)):
             answers.matrix[j][0] = answers.matrix[j][0]/main_elems[j]
         matrix.matrix = new_matrix
@@ -117,6 +118,7 @@ class Matrix:
                 for j in range(0, c2):
                     for i in range(0, c1):
                        row_sum = row_sum+m1.matrix[z][i] * m2.matrix[i][j]
+                       round(row_sum, 5)
                     row.append(row_sum)
                     row_sum = 0
                 m3.matrix.append(row)
@@ -131,6 +133,16 @@ class Matrix:
         for row in self.matrix:
             for el in row:
                 array.append(el)
+            while array[index] != max(array):
+                index += 1
+        return index
+
+    def max_index_abs(self):
+        index = 0
+        array = list()
+        for row in self.matrix:
+            for el in row:
+                array.append(abs(el))
             while array[index] != max(array):
                 index += 1
         return index
@@ -150,20 +162,33 @@ class Matrix:
         i = 0
         for el in vector1:
             new_row = list()
-            new_row.append(el + vector2[i])
+            new_row.append(round(el + vector2[i], 5))
             result.matrix.append(new_row)
             i += 1
         return result
     @staticmethod
-    def stop_condition(cur_residual, prev_residual):
-        try:
-            if (cur_residual.matrix[Matrix.max_index(cur_residual)][0] - prev_residual.matrix[Matrix.max_index(prev_residual)][0]) \
-                    / cur_residual.matrix[Matrix.max_index(prev_residual)][0] < 0.00001:
-                return False
-            else:
+    def stop_condition(cur_aprox, prev_aprox, numb_of_iter):
+        if numb_of_iter > 1203:
+            print("ANSWER: " + str(cur_aprox.matrix))
+            sys.exit()
+        else:
+            try:
+                tmp_vector = Matrix(3,1)
+                tmp_matrix = []
+                for i in range(0, len(cur_aprox.matrix)):
+                    tmp_row = list()
+                    tmp_row.append(cur_aprox.matrix[i][0] - prev_aprox.matrix[i][0])
+                    tmp_matrix.append(tmp_row)
+                tmp_vector.matrix = tmp_matrix
+                if tmp_vector.matrix[Matrix.max_index_abs(tmp_vector)][0] / prev_aprox.matrix[Matrix.max_index_abs(prev_aprox)][0] < 0.0001:
+                    return False
+                else:
+                    return True
+
+
+            except ZeroDivisionError:
                 return True
-        except ZeroDivisionError:
-            return True
+
 ### транспонировать матрицу
 
     def transpose(self):
