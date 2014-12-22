@@ -266,12 +266,13 @@ while Matrix.stop_condition(cur_aprox, prev_aprox, numb_of_iter):
         prev_aprox.matrix[i][0] = cur_aprox.matrix[i][0]
     cur_aprox.matrix[rk.max_index_abs()][0] = cur_aprox.matrix[rk.max_index_abs()][0] + rk.matrix[rk.max_index_abs()][0]
     numb_of_iter += 1
-
-
+    
     print('Итерация # {numb}'.format(numb = numb_of_iter))
-    print('Текущая невязка: ' + str(cur_aprox.matrix))
-    print('Предыдущая невязка: ' + str(prev_aprox.matrix))
+    print('Текущее приближение: ' + str(cur_aprox.matrix))
+    print('Предыдущее приближение: ' + str(prev_aprox.matrix))
     print('----------------------------' * 3)
+
+
 </code></pre>
 <p>
 Ответ:
