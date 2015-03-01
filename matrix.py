@@ -30,6 +30,7 @@ class Matrix:
                 self.matrix.append(row)
 
 # Метод для чтения матрицы из файла
+# Элементы строчки разделять запятой. Следующая строка - \n
 # params (filename string (optional))
 
     def import_matrix_from_file(self, filename='matrix.txt'):
@@ -71,7 +72,7 @@ class Matrix:
 # Приводит матрицу к удобному для вычислений виду согласно алгоритму метода релаксации
 
     @staticmethod
-    def comfortable_view(matrix, answers):
+    def comfortable_view_for_relax_method(matrix, answers):
         new_matrix, new_answers = list(), list()
         current_main_elem = 0
         main_elems = []
@@ -88,6 +89,7 @@ class Matrix:
         matrix.matrix = new_matrix
 
 # Отделяет матрицу с переменными или ответами от исходной (4х3) матрицы
+# Использовался для лабораторной работы. 
 
     def split_matrix(self, what_should_i_split):
         if what_should_i_split == "matrix":
@@ -113,7 +115,7 @@ class Matrix:
         row_sum = 0
         row = []
         if len(m2.matrix) != len(m1.matrix[0]):
-            print("Матрицы не могут быть перемножены")
+            raise VectorError("Матрицы не могут быть перемножены")
         else:
             r1 = len(m1.matrix)
             c1 = len(m1.matrix[0])
@@ -132,6 +134,7 @@ class Matrix:
         return m3
 
 # Возвращает индекс максимального элемента в векторе
+# Вектор - матрица (n, 1)
 
     def max_index(self):
         if self.j != 1:
@@ -160,7 +163,7 @@ class Matrix:
                 index += 1
         return index
 
-# Суммирует
+# Суммирует векторы
     @staticmethod
     def vector_sum(matrix1, matrix2):
         vector1 = []
@@ -226,45 +229,6 @@ class Matrix:
         for i in range(0, len(vec1.matrix)):
             res += (vec1.matrix[i][0] * vec2.matrix[i][0])
         return res
-
-# Распечатывает матрицу построчно
-
-    def print(self):
-        for i in range(0, len(self.matrix)):
-            print('|' + str(self.matrix[i]) + '|\n')
-
-# Нахождение первой лямбды
-
-    @staticmethod
-    def first_lambda(matrix, vec1, count):
-        lam, lam1 = 1, 0
-        arr = matrix.matrix
-        while abs(lam1 - lam) > 0.000001:
-            count += 1
-            lam = lam1
-            vec2 = Matrix.mult(matrix, vec1)  # Y(k+1) = AY(k)
-            lam1 = Matrix.vector_scalar_mult(vec2, vec1) / Matrix.vector_scalar_mult(vec1, vec1)
-            if count % 5 == 0:
-                vec2.to_norm()
-            vec1 = vec2  # Y(k) = y(k+1)
-        return lam1
-
-    @staticmethod
-    def second_lambda(vec1, matrix, lamf, count):
-        lam, lam1 = lamf, 0
-        vec2 = Matrix(3, 1)
-        vec2.matrix = [[1], [1], [1]]
-        while abs(lam1 - lam) > 0.1:
-            count += 1
-            lam = lam1
-            vec3 = Matrix.mult(matrix, vec2)
-            lam1 = (Matrix.vector_scalar_mult(vec3, vec2) - lamf * Matrix.vector_scalar_mult(vec2, vec2)) / (Matrix.vector_scalar_mult(vec2, vec2) - lamf * Matrix.vector_scalar_mult(vec1, vec2))
-            if count % 5 == 0:
-                for i in range(0, len(vec2.matrix)):
-                    vec2.matrix[i][0] = vec2.matrix[i][0] / vec3.max_index_abs()
-            vec1 = vec2
-            vec2 = vec3
-        return lam1
 
 
 

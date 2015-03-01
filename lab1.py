@@ -32,7 +32,7 @@ else:
 Приводим матрицу к удобному для вычислений виду
 """
 
-Matrix.comfortable_view(new_matrix, new_answers)
+Matrix.comfortable_view_for_relax_method(new_matrix, new_answers)
 for i in range(0, len(new_matrix.matrix)):
     new_matrix.matrix[i][i] = 0
 
